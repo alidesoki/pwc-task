@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: pwc-task-app
+  namespace: argocd
+spec:
+  project: pwc-task-project
+  source:
+    repoURL: https://github.com/pwc-task/pwc-task.git
+    targetRevision: HEAD
+    path: manifests/helm
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

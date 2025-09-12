@@ -1,0 +1,15 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: pwc-task-project
+  namespace: argocd
+spec:
+  description: Project for pwc-task repo
+  sourceRepos:
+    - https://github.com/pwc-task/pwc-task.git
+  destinations:
+    - namespace: default
+      server: https://kubernetes.default.svc
+  clusterResourceWhitelist:
+    - group: '*'
+      kind: '*'

@@ -1,0 +1,30 @@
+name: Build and Push Docker Image
+on:
+  workflow_dispatch
+  # push:
+  #   paths:
+  #     - 'src/**'
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-central-1
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+      - name: Build Docker image
+        run: |
+          COMMIT_HASH=$(git rev-parse --short HEAD)
+          docker build -t ${{ secrets.ECR_REPO }}/python-app:latest -t ${{ secrets.ECR_REPO }}/python-app:$COMMIT_HASH src
+      - name: Push Docker image
+        run: |
+          COMMIT_HASH=$(git rev-parse --short HEAD)
+          docker push ${{ secrets.ECR_REPO }}/python-app:latest
+          docker push ${{ secrets.ECR_REPO }}/python-app:$COMMIT_HASH

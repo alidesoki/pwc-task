@@ -1,0 +1,19 @@
+
+replicaCount: 1
+image:
+  repository: <your-ecr-repo-url>/python-app
+  tag: latest
+service:
+  type: ClusterIP
+  port: 80
+ingress:
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/certificate-arn: <acm-certificate-arn>
+  hosts:
+    - host: pwc-task.com
+      paths:
+        - /

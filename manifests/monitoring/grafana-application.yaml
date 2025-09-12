@@ -1,0 +1,35 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: grafana
+  namespace: argocd
+spec:
+  project: pwc-task-project
+  source:
+    repoURL: https://grafana.github.io/helm-charts
+    chart: grafana
+    targetRevision: 7.3.9
+    helm:
+      values: |
+        service:
+          type: ClusterIP
+        ingress:
+          enabled: true
+          annotations:
+            kubernetes.io/ingress.class: alb
+            alb.ingress.kubernetes.io/scheme: internet-facing
+            alb.ingress.kubernetes.io/target-type: ip
+            alb.ingress.kubernetes.io/certificate-arn: <acm-certificate-arn>
+          hosts:
+            - host: grafana.pwc-task.com
+              paths:
+                - /
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: monitoring
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

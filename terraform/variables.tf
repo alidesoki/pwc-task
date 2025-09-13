@@ -2,12 +2,12 @@
 ## Core
 variable "name_prefix" {
   type = string
-  default = "eks-env"
+  default = "eks-pwc-task"
 }
 
 variable "aws_region" {
   type = string
-  default = "us-east-1"
+  default = "eu-central-1"
 }
 
 variable "aws_cred_file_path" {
@@ -86,7 +86,7 @@ variable "cluster_addons" {
 
 variable "default_instance_types" {
   type = list(string)
-  default = [ "t3a.large" ]
+  default = [ "t3a.small" ]
 }
 
 variable "eks_managed_node_groups" {
@@ -104,7 +104,7 @@ variable "eks_managed_node_groups" {
       min_size = 1
       max_size = 1
       desired_size = 1
-      instance_types = ["t3a.large"]
+      instance_types = ["t3a.small"]
     }
   }
 }

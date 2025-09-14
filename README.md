@@ -21,7 +21,8 @@ pwc-task/
 │   │   └── templates.yaml
 │   └── monitoring/
 │       ├── prometheus-application.yaml
-│       └── grafana-application.yaml
+│       ├── grafana-application.yaml
+│       └── node-exporter-daemonset.yaml
 ├── terraform/
 │   ├── main.tf
 │   ├── backend.tf
@@ -55,7 +56,7 @@ pwc-task/
 ### 1. Clone the Repository
 
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/alidesoki/pwc-task.git
 cd pwc-task
 ```
 
@@ -208,7 +209,7 @@ kubectl logs -n kube-system deployment/aws-load-balancer-controller
 kubectl get pods -n argocd
 
 # View application logs
-kubectl logs -f deployment/your-app-name
+kubectl logs -f deployment/python-app
 
 # Check certificate status
 kubectl describe certificate -n default

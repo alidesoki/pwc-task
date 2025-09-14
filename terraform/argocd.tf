@@ -22,6 +22,41 @@ resource "helm_release" "argocd" {
 
 }
 
+# Create the root "App of Apps" ArgoCD Application
+resource "kubectl_manifest" "app_of_apps" {
+  yaml_body = yamlencode({
+    apiVersion = "argoproj.io/v1alpha1"
+    kind       = "Application"
+    metadata = {
+      name      = "app-of-apps"
+      namespace = var.argocd_target_namespace
+    }
+    spec = {
+      project = "default"
+      source = {
+        repoURL        = var.git_repo_url
+        targetRevision = "HEAD"
+        path           = "manifests/argocd"
+      }
+      destination = {
+        server    = "https://kubernetes.default.svc"
+        namespace = var.argocd_target_namespace
+      }
+      syncPolicy = {
+        automated = {
+          prune    = true
+          selfHeal = true
+        }
+        syncOptions = [
+          "CreateNamespace=true"
+        ]
+      }
+    }
+  })
+
+  depends_on = [helm_release.argocd]
+}
+
 resource "kubernetes_ingress_v1" "argocd_ingress" {
   metadata {
     name = "argocd-ingress"

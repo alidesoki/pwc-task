@@ -157,3 +157,10 @@ variable "argocd_server_insecure" {
   type = bool
   default = true
 }
+
+######################################################################
+## Git Repository
+variable "git_repo_url" {
+  type = string
+  description = "Git repository URL for ArgoCD applications"
+}

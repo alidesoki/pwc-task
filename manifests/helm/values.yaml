@@ -1,7 +1,7 @@
 
 replicaCount: 1
 image:
-  repository: <your-ecr-repo-url>/python-app
+  repository: 123456789012.dkr.ecr.eu-central-1.amazonaws.com/eks-pwc-task-app
   tag: latest
 service:
   type: ClusterIP

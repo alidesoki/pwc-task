@@ -25,6 +25,27 @@ spec:
               - host: prometheus.pwc-task.com
                 paths:
                   - /
+          extraScrapeConfigs: |
+            - job_name: 'python-app'
+              static_configs:
+                - targets: ['python-app.default.svc.cluster.local:5000']
+              metrics_path: /metrics
+              scrape_interval: 30s
+            - job_name: 'node-exporter'
+              kubernetes_sd_configs:
+                - role: endpoints
+                  namespaces:
+                    names:
+                      - monitoring
+              relabel_configs:
+                - source_labels: [__meta_kubernetes_service_name]
+                  action: keep
+                  regex: node-exporter
+                - source_labels: [__meta_kubernetes_endpoint_port_name]
+                  action: keep
+                  regex: metrics
+        nodeExporter:
+          enabled: false  # We're using our custom DaemonSet
   destination:
     server: https://kubernetes.default.svc
     namespace: monitoring
